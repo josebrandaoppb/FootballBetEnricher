@@ -1,0 +1,21 @@
+version: '3'
+services:
+  zookeeper:
+    container_name: zookeeper
+    image: wurstmeister/zookeeper
+    ports:
+      - "2181:2181"
+  kafka:
+    container_name: kafka
+    depends_on:
+      - zookeeper
+    image: wurstmeister/kafka:2.13-2.6.0
+    environment:
+      KAFKA_ADVERTISED_HOST_NAME: kafka
+      KAFKA_CREATE_TOPICS: "
+       inbound-football-bets:2:1,
+       outbound-football-bets:2:1,
+       participant-data:2:1"
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+    ports:
+      - 9092:9092
